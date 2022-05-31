@@ -1,6 +1,6 @@
 import Plan from './Plan';
 
-const ExampleConfig = {
+const PlanAppConfig = {
   settings: {
     layout: {
       config: {},
@@ -14,4 +14,4 @@ const ExampleConfig = {
   ],
 };
 
-export default ExampleConfig;
+export default PlanAppConfig;

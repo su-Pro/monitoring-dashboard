@@ -24,6 +24,14 @@ const navigationConfig = [
     icon: 'heroicons-outline:star',
     url: 'plan',
   },
+  {
+    id: 'note-card',
+    title: 'note',
+    translate: 'NOTE',
+    type: 'item',
+    icon: 'heroicons-outline:star',
+    url: 'apps/notes',
+  },
 ];
 
 export default navigationConfig;
