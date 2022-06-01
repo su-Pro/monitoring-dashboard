@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   closeNoteDialog,
-  getNotes,
+  getCards,
   removeNote,
   selectDialogNote,
   updateNote,
-} from '../../store/notesSlice';
+} from '../../../store/cardsSlice';
 import NoteForm from '../../note-form/NoteForm';
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -24,7 +24,7 @@ function NoteDialog(props) {
 
   const handleOnChange = useDebounce((_note) => {
     dispatch(updateNote(_note)).then(() => {
-      dispatch(getNotes(routeParams));
+      dispatch(getCards(routeParams));
     });
   }, 600);
 

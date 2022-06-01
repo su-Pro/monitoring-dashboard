@@ -14,14 +14,9 @@ import withRouter from '@fuse/core/withRouter';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import * as yup from 'yup';
 import format from 'date-fns/format';
-import { useDispatch } from 'react-redux';
 import NoteFormList from './tasks/NoteFormList';
-import NoteFormLabelMenu from './NoteFormLabelMenu';
-import NoteFormReminder from './NoteFormReminder';
 import NoteFormUploadImage from './NoteFormUploadImage';
-import NoteModel from '../model/NoteModel';
-import NoteReminderLabel from '../NoteReminderLabel';
-import NoteLabel from '../NoteLabel';
+import NoteModel from '../../model/schema/NoteModel';
 
 /**
  * Form Validation Schema
@@ -41,7 +36,6 @@ const schema = yup.object().shape({
 function NoteForm(props) {
   const [showList, setShowList] = useState(false);
   const routeParams = useParams();
-  const dispatch = useDispatch();
 
   const defaultValues = _.merge(
     {},
@@ -169,37 +163,8 @@ function NoteForm(props) {
             }}
           />
 
-          {(noteForm.labels || noteForm.reminder || noteForm.createdAt) && (
+          {noteForm.createdAt && (
             <div className="flex flex-wrap w-full px-20 my-16 -mx-4">
-              {noteForm.reminder && (
-                <NoteReminderLabel
-                  className="mt-4 mx-4"
-                  date={noteForm.reminder}
-                  onDelete={() => {
-                    setValue('reminder', null);
-                  }}
-                />
-              )}
-
-              <Controller
-                name="labels"
-                control={control}
-                defaultValue={[]}
-                render={({ field: { onChange, value } }) => {
-                  if (!value) {
-                    return null;
-                  }
-                  return value.map((id) => (
-                    <NoteLabel
-                      id={id}
-                      key={id}
-                      className="mt-4 mx-4"
-                      onDelete={() => onChange(value.filter((_id) => _id !== id))}
-                    />
-                  ));
-                }}
-              />
-
               {noteForm.createdAt && (
                 <Typography color="text.secondary" className="text-12 mt-8 mx-4">
                   Edited: {format(new Date(noteForm.createdAt), 'MMM dd yy, h:mm')}
@@ -212,19 +177,6 @@ function NoteForm(props) {
 
       <div className="flex flex-auto justify-between items-center px-16 pb-12">
         <div className="flex items-center">
-          <Tooltip title="Remind me" placement="bottom">
-            <div>
-              <Controller
-                name="reminder"
-                control={control}
-                defaultValue={[]}
-                render={({ field: { onChange, value } }) => (
-                  <NoteFormReminder reminder={value} onChange={(val) => onChange(val)} />
-                )}
-              />
-            </div>
-          </Tooltip>
-
           <Tooltip title="Add image" placement="bottom">
             <div>
               <NoteFormUploadImage
@@ -234,7 +186,6 @@ function NoteForm(props) {
               />
             </div>
           </Tooltip>
-
           <Tooltip title="Add tasks" placement="bottom">
             <IconButton
               className="w-32 h-32 mx-4 p-0"
@@ -244,43 +195,6 @@ function NoteForm(props) {
               <FuseSvgIcon size={20}>heroicons-outline:pencil-alt</FuseSvgIcon>
             </IconButton>
           </Tooltip>
-
-          <Tooltip title="Change labels" placement="bottom">
-            <div>
-              <NoteFormLabelMenu
-                note={noteForm}
-                onChange={(labels) => setValue('labels', labels)}
-              />
-            </div>
-          </Tooltip>
-
-          <Controller
-            name="archived"
-            control={control}
-            defaultValue={false}
-            render={({ field: { onChange, value } }) => (
-              <Tooltip title={value ? 'Unarchive' : 'Archive'} placement="bottom">
-                <div>
-                  <IconButton
-                    className="w-32 h-32 mx-4 p-0"
-                    // disabled={newFormButtonDisabled()}
-                    onClick={() => {
-                      onChange(!value);
-
-                      if (props.variant === 'new') {
-                        setTimeout(() => onCreate(getValues()));
-                      }
-                    }}
-                    size="large"
-                  >
-                    <FuseSvgIcon size={20}>
-                      {value ? 'heroicons-solid:archive' : 'heroicons-outline:archive'}
-                    </FuseSvgIcon>
-                  </IconButton>
-                </div>
-              </Tooltip>
-            )}
-          />
         </div>
 
         <div className="flex items-center">

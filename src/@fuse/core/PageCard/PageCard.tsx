@@ -2,12 +2,16 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import * as PropTypes from 'prop-types';
-import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
+import { forwardRef, memo, useRef } from 'react';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import FusePageCardedHeader from './FusePageCardedHeader';
-import FusePageCardedSidebar from './FusePageCardedSidebar';
+import PageCardedHeader from './PageCardedHeader';
 
-const Root = styled('div')(({ theme, ...props }) => ({
+interface IPageCard {
+  scroll: 'normal' | 'page' | 'content'
+}
+
+
+const Root = styled('div')<PageCard>(({ theme, ...props }) => ({
   display: 'flex',
   flexDirection: 'column',
   minWidth: 0,
@@ -17,7 +21,6 @@ const Root = styled('div')(({ theme, ...props }) => ({
   width: '100%',
   height: 'auto',
   backgroundColor: theme.palette.background.default,
-
   '& .FusePageCarded-scroll-content': {
     height: '100%',
   },
@@ -85,13 +88,6 @@ const Root = styled('div')(({ theme, ...props }) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
           }),
-
-          '&.FusePageCarded-leftSidebar': {
-            marginLeft: -props.leftsidebarwidth,
-          },
-          '&.FusePageCarded-rightSidebar': {
-            marginRight: -props.rightsidebarwidth,
-          },
         },
       },
     },
@@ -110,69 +106,12 @@ const Root = styled('div')(({ theme, ...props }) => ({
     maxWidth: '100%',
     height: '100%',
   },
-
-  '& .FusePageCarded-leftSidebar': {
-    width: props.leftsidebarwidth,
-
-    [theme.breakpoints.up('lg')]: {
-      // borderRight: `1px solid ${theme.palette.divider}`,
-      // borderLeft: 0,
-    },
-  },
-
-  '& .FusePageCarded-rightSidebar': {
-    width: props.rightsidebarwidth,
-
-    [theme.breakpoints.up('lg')]: {
-      // borderLeft: `1px solid ${theme.palette.divider}`,
-      // borderRight: 0,
-    },
-  },
-
-  '& .FusePageCarded-sidebarHeader': {
-    height: headerHeight,
-    minHeight: headerHeight,
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
-  },
-
-  '& .FusePageCarded-sidebarHeaderInnerSidebar': {
-    backgroundColor: 'transparent',
-    color: 'inherit',
-    height: 'auto',
-    minHeight: 'auto',
-  },
-
-  '& .FusePageCarded-sidebarContent': {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100%',
-  },
-
-  '& .FusePageCarded-backdrop': {
-    position: 'absolute',
-  },
 }));
 
 const headerHeight = 120;
 const toolbarHeight = 64;
 
-const FusePageCarded = forwardRef((props, ref) => {
-  // console.info("render::FusePageCarded");
-  const leftSidebarRef = useRef(null);
-  const rightSidebarRef = useRef(null);
-  const rootRef = useRef(null);
-
-  useImperativeHandle(ref, () => ({
-    rootRef,
-    toggleLeftSidebar: (val) => {
-      leftSidebarRef.current.toggleSidebar(val);
-    },
-    toggleRightSidebar: (val) => {
-      rightSidebarRef.current.toggleSidebar(val);
-    },
-  }));
-
+const PageCard: React.FC<IPageCard> = forwardRef((props, _) => {
   return (
     <>
       <GlobalStyles
@@ -208,21 +147,9 @@ const FusePageCarded = forwardRef((props, ref) => {
         leftsidebarwidth={props.leftSidebarWidth}
         rightsidebarwidth={props.rightSidebarWidth}
       >
-        {props.header && <FusePageCardedHeader header={props.header} />}
-
+        {props.header && <PageCardedHeader header={props.header} />}
         <div className="flex flex-auto flex-col container z-10 h-full shadow-1 rounded-t-16 relative overflow-hidden">
           <div className="FusePageCarded-wrapper">
-            {props.leftSidebarContent && (
-              <FusePageCardedSidebar
-                position="left"
-                content={props.leftSidebarContent}
-                variant={props.leftSidebarVariant || 'permanent'}
-                ref={leftSidebarRef}
-                rootRef={rootRef}
-                open={props.leftSidebarOpen}
-                onClose={props.leftSidebarOnClose}
-              />
-            )}
             <FuseScrollbars
               className="FusePageCarded-contentWrapper"
               enable={props.scroll === 'content'}
@@ -231,17 +158,6 @@ const FusePageCarded = forwardRef((props, ref) => {
                 <div className={clsx('FusePageCarded-content')}>{props.content}</div>
               )}
             </FuseScrollbars>
-            {props.rightSidebarContent && (
-              <FusePageCardedSidebar
-                position="right"
-                content={props.rightSidebarContent}
-                variant={props.rightSidebarVariant || 'permanent'}
-                ref={rightSidebarRef}
-                rootRef={rootRef}
-                open={props.rightSidebarOpen}
-                onClose={props.rightSidebarOnClose}
-              />
-            )}
           </div>
         </div>
       </Root>
@@ -249,7 +165,7 @@ const FusePageCarded = forwardRef((props, ref) => {
   );
 });
 
-FusePageCarded.propTypes = {
+PageCard.propTypes = {
   leftSidebarHeader: PropTypes.node,
   leftSidebarContent: PropTypes.node,
   leftSidebarVariant: PropTypes.node,
@@ -267,7 +183,7 @@ FusePageCarded.propTypes = {
   leftSidebarOnClose: PropTypes.func,
 };
 
-FusePageCarded.defaultProps = {
+PageCard.defaultProps = {
   classes: {},
   scroll: 'page',
   leftSidebarOpen: false,
@@ -276,4 +192,4 @@ FusePageCarded.defaultProps = {
   leftSidebarWidth: 240,
 };
 
-export default memo(styled(FusePageCarded)``);
+export default memo(styled(PageCard)``);

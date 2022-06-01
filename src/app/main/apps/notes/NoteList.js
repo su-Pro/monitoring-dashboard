@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import withRouter from '@fuse/core/withRouter';
 import { useParams } from 'react-router-dom';
 import NoteListItem from './NoteListItem';
-import { selectNotes, selectSearchText, selectVariateDescSize } from './store/notesSlice';
+import { selectNotes, selectSearchText, selectVariateDescSize } from './store/cardsSlice';
 
 function NoteList(props) {
   const notes = useSelector(selectNotes);

@@ -7,7 +7,7 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import NoteLabel from './NoteLabel';
 import NoteReminderLabel from './NoteReminderLabel';
 import setDescriptionStyle from './setDescriptionStyle';
-import { openNoteDialog } from './store/notesSlice';
+import { openNoteDialog } from './store/cardsSlice';
 
 function NoteListItem(props) {
   const dispatch = useDispatch();

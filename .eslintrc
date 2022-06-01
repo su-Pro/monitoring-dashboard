@@ -46,7 +46,7 @@
         "extensions": [".js", ".jsx", ".tsx"]
       }
     ],
-    "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
+//    "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
     "no-unused-vars": "off",
     "no-console": "off",
     "no-use-before-define": "off",
@@ -69,6 +69,15 @@
     "react/jsx-uses-react": "off", // after react v17
     "react/jsx-no-bind": "off",
     "unused-imports/no-unused-imports": "warn",
-    "import/extensions": ".tsx,.ts,.js,.jsx,.json"
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ]
   }
 }
